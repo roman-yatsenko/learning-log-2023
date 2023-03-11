@@ -8,6 +8,8 @@ app_name = 'learning_logs'
 urlpatterns = [
     # Домашня сторінка
     path('', views.index, name='index'),
-    # Сторніка з переліком всіх тем
+    # Сторінка з переліком всіх тем
     path('topics/', views.topics, name='topics'),
+    # Сторінка з докладною інформацією за окремою темою
+    path('topics/<int:topic_id>/', views.topic, name='topic'),
 ]
