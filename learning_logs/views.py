@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 
 from .models import Topic
-from .forms import TopicForm
+from .forms import TopicForm, EntryForm
 
 # Create your views here.
 
@@ -37,3 +37,19 @@ def new_topic(request):
     
     context = {'form': form}
     return render(request, 'learning_logs/new_topic.html', context)
+
+def new_entry(request, topic_id):
+    """Додає новий запис до певної теми"""
+    topic = Topic.objects.get(id=topic_id)
+    if request.method != 'POST':
+        form = EntryForm()
+    else:
+        form = EntryForm(data=request.POST)
+        if form.is_valid():
+            new_entry_object = form.save(commit=False)
+            new_entry_object.topic = topic
+            new_entry_object.save()
+            return redirect('learning_logs:topic', topic_id=topic_id)
+
+    context = {'form': form, 'topic': topic,}
+    return render(request, 'learning_logs/new_entry.html', context)    
